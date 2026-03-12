@@ -5,6 +5,7 @@ import ProcessingPage from "./pages/ProcessingPage";
 import ResumeAnalysisDashboard from "./pages/ResumeAnalysisDashboard";
 import PhishingDetection from "./pages/PhishingDetection";
 import CareerRoadmap from "./pages/CareerRoadmap";
+import InterviewSimulator from "./pages/InterviewSimulator";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/phishing-detection" element={<PhishingDetection />} />
         <Route path="/career-roadmap" element={<CareerRoadmap />} />
         <Route path="/results" element={<Navigate to="/resume-analysis" replace />} />
+        <Route path="/interview-simulator" element={<InterviewSimulator />} />
       </Routes>
     </BrowserRouter>
   );

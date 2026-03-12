@@ -4,6 +4,7 @@ import SkillGapChart from "../components/SkillGapChart";
 import "../home-stripe.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import InterviewSimulator from "./InterviewSimulator";
 
 const detectedSkills = ["Python", "Machine Learning", "SQL", "React", "Data Analysis"];
 const missingSkills = ["Docker", "AWS", "System Design"];
@@ -133,6 +134,11 @@ function ResumeAnalysisDashboard() {
                         </div>
                         <ArrowLeft size={18} className="nav-card-arrow" />
                     </div>
+                </div>
+
+                {/* INTERVIEW SIMULATOR */}
+                <div className="dashboard-card full-width animate-fade-in-up delay-6" style={{ marginTop: '24px' }}>
+                    <InterviewSimulator />
                 </div>
 
                     </div>

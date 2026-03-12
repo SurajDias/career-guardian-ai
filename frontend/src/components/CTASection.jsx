@@ -14,8 +14,8 @@ export default function CTASection() {
                         <button className="stripe-btn-primary" onClick={() => navigate("/upload")}>
                             Start now <span className="arrow">→</span>
                         </button>
-                        <button className="stripe-btn-secondary" onClick={() => navigate("/upload")}>
-                            Check Job Scams <span className="arrow">→</span>
+                        <button className="stripe-btn-secondary" onClick={() => navigate("/interview-simulator")}>
+                            Start AI Interview <span className="arrow">→</span>
                         </button>
                     </div>
                 </div>

@@ -24,8 +24,8 @@ export default function HeroSection() {
                         <button className="stripe-btn-primary large" onClick={() => navigate("/upload")}>
                             Start now <span className="arrow">→</span>
                         </button>
-                        <button className="stripe-btn-secondary large" onClick={() => navigate("/upload")}>
-                            Check Job Scam <span className="arrow">→</span>
+                        <button className="stripe-btn-secondary large" onClick={() => navigate("/interview-simulator")}>
+                            Start AI Interview <span className="arrow">→</span>
                         </button>
                     </div>
                 </div>
