@@ -1,6 +1,9 @@
+from fastapi import Form
+from backend.services.skill_gap_service import calculate_skill_gap
 from backend.services.career_predictor import generate_learning_path
 from backend.ai_modules.skill_matcher import extract_job_skills
 from fastapi import APIRouter
+from backend.database.db_connection import analysis_db
 
 router = APIRouter(prefix="/api/v1/job", tags=["job"])
 
@@ -15,21 +18,27 @@ def job_skill_extraction(job_description: str):
 
 
 @router.post("/skill-gap/analyze")
-def skill_gap(resume_skills: list, job_skills: list):
+def skill_gap(resume_skills: str = Form(...), job_skills: str = Form(...)):
 
-    matched = list(set(resume_skills) & set(job_skills))
-    missing = list(set(job_skills) - set(resume_skills))
+    resume_list = resume_skills.split(",")
+    job_list = job_skills.split(",")
 
-    if len(job_skills) == 0:
-        score = 0
-    else:
-        score = int((len(matched) / len(job_skills)) * 100)
+    result = calculate_skill_gap(resume_list, job_list)
 
-    roadmap = generate_learning_path(missing)
+    return result
 
-    return {
-        "match_score": score,
-        "matched_skills": matched,
-        "missing_skills": missing,
-        "learning_roadmap": roadmap
-    }
+@router.get("/analysis/history")
+def get_analysis_history():
+
+    results = []
+
+    for r in analysis_db:
+        results.append({
+            "resume_skills": r.resume_skills,
+            "job_skills": r.job_skills,
+            "match_score": r.match_score,
+            "matched_skills": r.matched_skills,
+            "missing_skills": r.missing_skills
+        })
+
+    return results
