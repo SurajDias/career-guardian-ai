@@ -1,0 +1,550 @@
+/* ========== STRIPE INSPIRED LANDING PAGE CSS ========== */
+
+.stripe-landing-page {
+  /* Stripe Light Theme Variables */
+  --s-bg: #f6f9fc;
+  --s-bg-card: #ffffff;
+  --s-text-head: #0a2540;
+  --s-text-body: #425466;
+  --s-primary: #635bff;
+  --s-primary-hover: #0a2540;
+  --s-accent: #00d4ff;
+  --s-shadow: 0 13px 27px -5px rgba(50,50,93,0.25), 0 8px 16px -8px rgba(0,0,0,0.3);
+  --s-shadow-hover: 0 30px 60px -12px rgba(50,50,93,0.25), 0 18px 36px -18px rgba(0,0,0,0.3);
+  --s-shadow-soft: 0 4px 6px rgba(50,50,93,0.11), 0 1px 3px rgba(0,0,0,0.08);
+  --s-border: #e6ebf1;
+  --s-radius: 8px;
+  --s-radius-lg: 16px;
+  --s-transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --s-container: 1080px;
+
+  background-color: var(--s-bg);
+  color: var(--s-text-body);
+  font-family: var(--font);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.stripe-container {
+  max-width: var(--s-container);
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+}
+
+/* Typography Overrides */
+.stripe-landing-page h1, 
+.stripe-landing-page h2, 
+.stripe-landing-page h3, 
+.stripe-landing-page h4 {
+  color: var(--s-text-head);
+  letter-spacing: -0.02em;
+}
+
+.stripe-landing-page p {
+  line-height: 1.6;
+}
+
+.stripe-link {
+  color: var(--s-primary);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--s-transition);
+}
+
+.stripe-link:hover {
+  color: var(--s-primary-hover);
+}
+
+/* Buttons */
+.stripe-btn-primary {
+  background-color: var(--s-primary);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--s-transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stripe-btn-primary:hover {
+  background-color: var(--s-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--s-shadow-soft);
+}
+
+.stripe-btn-primary.large {
+  padding: 12px 24px;
+  font-size: 1.05rem;
+  border-radius: 24px;
+}
+
+.stripe-btn-secondary {
+  background-color: #fff;
+  color: var(--s-text-head);
+  border: 1px solid var(--s-border);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--s-transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stripe-btn-secondary:hover {
+  border-color: #cdd2d6;
+  transform: translateY(-1px);
+  box-shadow: var(--s-shadow-soft);
+}
+
+.stripe-btn-secondary.large {
+  padding: 12px 24px;
+  font-size: 1.05rem;
+  border-radius: 24px;
+}
+
+.stripe-btn-text {
+  background: transparent;
+  color: var(--s-text-head);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 16px;
+  transition: var(--s-transition);
+}
+
+.stripe-btn-text:hover {
+  color: var(--s-primary);
+}
+
+.arrow {
+  transition: transform 0.2s ease;
+}
+
+.stripe-btn-primary:hover .arrow,
+.stripe-btn-secondary:hover .arrow,
+.stripe-link:hover .arrow {
+  transform: translateX(3px);
+}
+
+/* ========== NAVBAR ========== */
+.stripe-navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 20px 0;
+}
+
+.stripe-nav-container {
+  max-width: var(--s-container);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stripe-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--s-text-head);
+}
+
+.stripe-logo-icon {
+  color: var(--s-primary);
+}
+
+.stripe-logo-text {
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.04em;
+}
+
+.stripe-nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.stripe-nav-links button {
+  background: none;
+  border: none;
+  font-weight: 600;
+  color: var(--s-text-head);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--s-transition);
+}
+
+.stripe-nav-links button:hover {
+  color: var(--s-primary);
+}
+
+.stripe-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stripe-mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.hamburger {
+  width: 20px;
+  height: 2px;
+  background: var(--s-text-head);
+}
+
+/* ========== HERO SECTION ========== */
+.stripe-hero {
+  padding: 160px 0 120px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* Simulated Mesh Gradient using blobs */
+.stripe-hero-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  background: var(--s-bg);
+}
+
+.stripe-gradient-blob {
+  position: absolute;
+  filter: blur(80px);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.blob-1 {
+  width: 600px;
+  height: 600px;
+  background: #ff7eb3;
+  top: -200px;
+  right: -100px;
+}
+
+.blob-2 {
+  width: 500px;
+  height: 500px;
+  background: #7bd5f5;
+  top: 100px;
+  left: -200px;
+}
+
+.blob-3 {
+  width: 400px;
+  height: 400px;
+  background: #635bff;
+  bottom: -150px;
+  right: 20%;
+}
+
+.blob-4 {
+  width: 700px;
+  height: 300px;
+  background: #ffffff;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0.8;
+  filter: blur(40px);
+  width: 100%;
+}
+
+.hero-content-container {
+  position: relative;
+  z-index: 1;
+}
+
+.stripe-hero-main {
+  max-width: 680px;
+}
+
+.stripe-badge {
+  display: inline-block;
+  background: rgba(99, 91, 255, 0.1);
+  color: var(--s-primary);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 24px;
+}
+
+.stripe-hero-title {
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+}
+
+.stripe-hero-subtitle {
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  color: var(--s-text-body);
+  margin-bottom: 40px;
+  max-width: 560px;
+}
+
+.stripe-hero-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+/* ========== FEATURES SECTION ========== */
+.stripe-features {
+  padding: 80px 0;
+  background: #ffffff;
+  position: relative;
+  z-index: 2;
+}
+
+.stripe-section-header {
+  max-width: 600px;
+  margin-bottom: 60px;
+}
+
+.stripe-section-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.stripe-section-subtitle {
+  font-size: 1.15rem;
+  color: var(--s-text-body);
+}
+
+.stripe-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px;
+}
+
+.stripe-card {
+  background: var(--s-bg-card);
+  padding: 32px;
+  border-radius: var(--s-radius-lg);
+  box-shadow: var(--s-shadow-soft);
+  transition: var(--s-transition);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.stripe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--s-shadow);
+}
+
+.stripe-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.icon-purple { background: rgba(99, 91, 255, 0.1); color: var(--s-primary); }
+.icon-cyan   { background: rgba(0, 212, 255, 0.1); color: #00b4d8; }
+.icon-blue   { background: rgba(10, 37, 64, 0.1); color: var(--s-text-head); }
+.icon-green  { background: rgba(0, 212, 170, 0.1); color: #00a884; }
+
+.stripe-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.stripe-card p {
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  flex: 1;
+}
+
+/* ========== CTA SECTION ========== */
+.stripe-cta {
+  padding: 100px 0;
+  background: var(--s-bg);
+}
+
+.stripe-cta-box {
+  background: var(--s-primary);
+  border-radius: var(--s-radius-lg);
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--s-shadow);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.stripe-cta-box::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.stripe-cta-content {
+  max-width: 500px;
+  position: relative;
+  z-index: 1;
+}
+
+.stripe-cta-content h2 {
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.stripe-cta-content p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.stripe-cta-actions {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.stripe-btn-primary.inverse {
+  background: white;
+  color: var(--s-primary);
+}
+
+.stripe-btn-text-dark {
+  background: transparent;
+  color: white;
+  border: none;
+  font-weight: 600;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: var(--s-transition);
+}
+
+.stripe-btn-text-dark:hover {
+  opacity: 0.8;
+}
+
+/* ========== FOOTER ========== */
+.stripe-footer {
+  background: var(--s-bg);
+  padding: 80px 0 40px;
+}
+
+.stripe-footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+
+.stripe-footer-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.stripe-logo-small {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--s-text-head);
+  font-weight: 800;
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+}
+
+.stripe-country {
+  color: var(--s-text-dim);
+  font-size: 0.9rem;
+}
+
+.stripe-footer-column h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.stripe-footer-column a {
+  display: block;
+  color: var(--s-text-body);
+  text-decoration: none;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: var(--s-transition);
+}
+
+.stripe-footer-column a:hover {
+  color: var(--s-primary);
+}
+
+/* ========== RESPONSIVENESS ========== */
+@media (max-width: 900px) {
+  .stripe-cta-box {
+    flex-direction: column;
+    text-align: left;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 40px;
+  }
+  
+  .stripe-footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .stripe-nav-links, .stripe-nav-actions {
+    display: none;
+  }
+  
+  .stripe-mobile-menu {
+    display: flex;
+  }
+  
+  .stripe-hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .stripe-section-title {
+    font-size: 2rem;
+  }
+}
