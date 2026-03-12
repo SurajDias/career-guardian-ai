@@ -15,17 +15,17 @@ export default function HeroSection() {
                 <div className="stripe-hero-main animate-fade-in-up">
                     <span className="stripe-badge">Career Protection API</span>
                     <h1 className="stripe-hero-title">
-                        Financial infrastructure<br/>for your career
+                        Your AI Career Guardian<br />
                     </h1>
                     <p className="stripe-hero-subtitle">
-                        Millions of professionals use Career Guardian to analyze resumes, detect job scams, and build personalized roadmaps. Protect your future from your first application to your executive role.
+                        Your career deserves protection. Career Guardian uses AI to analyze your resume, detect job scams, identify missing skills, and generate a personalized roadmap to help you grow with confidence in today’s competitive job market.
                     </p>
                     <div className="stripe-hero-buttons">
                         <button className="stripe-btn-primary large" onClick={() => navigate("/upload")}>
                             Start now <span className="arrow">→</span>
                         </button>
                         <button className="stripe-btn-secondary large" onClick={() => navigate("/upload")}>
-                            Contact sales <span className="arrow">→</span>
+                            Check Job Scam <span className="arrow">→</span>
                         </button>
                     </div>
                 </div>
