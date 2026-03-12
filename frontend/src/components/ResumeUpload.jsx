@@ -11,14 +11,11 @@ function UploadResume() {
     };
 
     const handleSubmit = () => {
-
         if (!file) {
             alert("Please upload a resume first");
             return;
         }
-
         console.log("Sending file to processing page");
-
         navigate("/processing", { state: { file } });
     };
 
@@ -28,19 +25,16 @@ function UploadResume() {
             <h2>Upload Your Resume</h2>
 
             <div className="upload-box">
-
                 <input
                     type="file"
                     accept=".pdf,.doc,.docx"
                     onChange={handleFileChange}
                 />
-
                 {file && (
                     <p className="file-name">
                         Uploaded: {file.name}
                     </p>
                 )}
-
             </div>
 
             <button
