@@ -9,13 +9,13 @@
   --s-primary: #635bff;
   --s-primary-hover: #0a2540;
   --s-accent: #00d4ff;
-  --s-shadow: 0 13px 27px -5px rgba(50,50,93,0.25), 0 8px 16px -8px rgba(0,0,0,0.3);
-  --s-shadow-hover: 0 30px 60px -12px rgba(50,50,93,0.25), 0 18px 36px -18px rgba(0,0,0,0.3);
-  --s-shadow-soft: 0 4px 6px rgba(50,50,93,0.11), 0 1px 3px rgba(0,0,0,0.08);
+  --s-shadow: 0 30px 60px -12px rgba(50,50,93,0.25), 0 18px 36px -18px rgba(0,0,0,0.3);
+  --s-shadow-hover: 0 40px 70px -15px rgba(50,50,93,0.3), 0 24px 48px -20px rgba(0,0,0,0.35);
+  --s-shadow-soft: 0 4px 14px 0 rgba(0,0,0,0.08);
   --s-border: #e6ebf1;
-  --s-radius: 8px;
-  --s-radius-lg: 16px;
-  --s-transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --s-radius: 12px;
+  --s-radius-lg: 24px;
+  --s-transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --s-container: 1080px;
 
   background-color: var(--s-bg);
@@ -77,8 +77,8 @@
 
 .stripe-btn-primary:hover {
   background-color: var(--s-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--s-shadow-soft);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(10, 37, 64, 0.15);
 }
 
 .stripe-btn-primary.large {
@@ -104,7 +104,8 @@
 
 .stripe-btn-secondary:hover {
   border-color: #cdd2d6;
-  transform: translateY(-1px);
+  background-color: #f6f9fc;
+  transform: translateY(-2px);
   box-shadow: var(--s-shadow-soft);
 }
 
@@ -135,7 +136,7 @@
 .stripe-btn-primary:hover .arrow,
 .stripe-btn-secondary:hover .arrow,
 .stripe-link:hover .arrow {
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
 /* ========== NAVBAR ========== */
@@ -244,25 +245,28 @@
 .blob-1 {
   width: 600px;
   height: 600px;
-  background: #ff7eb3;
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
   top: -200px;
   right: -100px;
+  animation: float 14s ease-in-out infinite alternate;
 }
 
 .blob-2 {
   width: 500px;
   height: 500px;
-  background: #7bd5f5;
+  background: linear-gradient(135deg, #7bd5f5, #00d4ff);
   top: 100px;
   left: -200px;
+  animation: float 18s ease-in-out infinite alternate-reverse;
 }
 
 .blob-3 {
   width: 400px;
   height: 400px;
-  background: #635bff;
+  background: linear-gradient(135deg, #635bff, #7c4dff);
   bottom: -150px;
   right: 20%;
+  animation: float 12s ease-in-out infinite alternate;
 }
 
 .blob-4 {
@@ -359,8 +363,9 @@
 }
 
 .stripe-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px) scale(1.015);
   box-shadow: var(--s-shadow);
+  border-color: rgba(50,50,93,0.05);
 }
 
 .stripe-card-icon {
