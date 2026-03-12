@@ -7,15 +7,15 @@ export default function CTASection() {
             <div className="stripe-container">
                 <div className="stripe-cta-box animate-fade-in-up delay-2">
                     <div className="stripe-cta-content">
-                        <h2>Ready to secure your career?</h2>
-                        <p>Join millions of professionals who use our platform to grow safely.</p>
+                        <h2>Ready to protect and grow your career?</h2>
+                        <p>Start using Career Guardian to analyze your resume, detect job scams, and build a personalized roadmap for your professional growth.</p>
                     </div>
                     <div className="stripe-cta-actions">
                         <button className="stripe-btn-primary" onClick={() => navigate("/upload")}>
                             Start now <span className="arrow">→</span>
                         </button>
                         <button className="stripe-btn-secondary" onClick={() => navigate("/upload")}>
-                            Contact sales <span className="arrow">→</span>
+                            Check Job Scams <span className="arrow">→</span>
                         </button>
                     </div>
                 </div>

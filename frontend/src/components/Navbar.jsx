@@ -11,11 +11,11 @@ export default function Navbar() {
                     <span className="stripe-logo-text">CareerGuardian</span>
                 </div>
                 <nav className="stripe-nav-links">
-                    <button>Products</button>
-                    <button>Solutions</button>
-                    <button>Developers</button>
-                    <button>Resources</button>
-                    <button>Pricing</button>
+                    <button>Features</button>
+                    <button>How it works</button>
+                    <button>Security</button>
+                    <button>About</button>
+
                 </nav>
                 <div className="stripe-nav-actions">
                     <button className="stripe-btn-text" onClick={() => navigate("/upload")}>Sign in</button>

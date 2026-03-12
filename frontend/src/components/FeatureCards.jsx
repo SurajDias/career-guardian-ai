@@ -10,7 +10,7 @@ export default function FeatureCards() {
                         Everything you need to navigate the modern job market, perfectly integrated and designed to help you land your dream role faster.
                     </p>
                 </div>
-                
+
                 <div className="stripe-feature-grid">
                     <div className="stripe-card animate-fade-in-up delay-1">
                         <div className="stripe-card-icon icon-purple">
@@ -40,9 +40,9 @@ export default function FeatureCards() {
                         <div className="stripe-card-icon icon-green">
                             <Shield size={22} />
                         </div>
-                        <h3>Enterprise Grade</h3>
-                        <p>Bank-level security and privacy for your professional data.</p>
-                        <a href="#" className="stripe-link">Read our privacy policy <span className="arrow">→</span></a>
+                        <h3>Skill Gap Insights</h3>
+                        <p>Discover missing skills in your resume and get recommendations to improve your employability.</p>
+                        <a href="#" className="stripe-link">View Skill Insights <span className="arrow">→</span></a>
                     </div>
                 </div>
             </div>
