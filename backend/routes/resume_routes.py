@@ -1,3 +1,4 @@
+from backend.services.ats_analyzer import analyze_resume
 from backend.ai_modules.skill_extractor import extract_skills
 from backend.ai_modules.resume_parser import extract_text_from_pdf
 from fastapi import APIRouter, UploadFile, File
@@ -24,3 +25,10 @@ def resume_skills(resume_text: str):
     return {
         "extracted_skills": skills
     }
+
+@router.post("/ats-score")
+def ats_score(resume_text: str):
+
+    result = analyze_resume(resume_text)
+
+    return result
