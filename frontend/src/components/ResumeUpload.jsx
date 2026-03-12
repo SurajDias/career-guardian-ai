@@ -17,12 +17,12 @@ function UploadResume() {
             return;
         }
 
-        // later this will send to backend
-        navigate("/results");
+        console.log("Sending file to processing page");
+
+        navigate("/processing", { state: { file } });
     };
 
     return (
-
         <div className="upload-container">
 
             <h2>Upload Your Resume</h2>
@@ -51,7 +51,6 @@ function UploadResume() {
             </button>
 
         </div>
-
     );
 }
 

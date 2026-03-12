@@ -1,4 +1,4 @@
-# simple list of common tech skills
+import re
 
 SKILLS_DB = [
     "python",
@@ -29,7 +29,10 @@ def extract_skills(text):
     found_skills = []
 
     for skill in SKILLS_DB:
-        if skill in text:
+
+        pattern = r"\b" + re.escape(skill) + r"\b"
+
+        if re.search(pattern, text):
             found_skills.append(skill)
 
     return found_skills

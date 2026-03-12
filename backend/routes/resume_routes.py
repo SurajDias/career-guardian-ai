@@ -8,13 +8,21 @@ router = APIRouter(prefix="/api/v1/resume", tags=["resume"])
 
 
 @router.post("/upload")
-async def upload_resume(resume_file: UploadFile = File(...)):
+async def upload_resume(file: UploadFile = File(...)):
 
-    text = extract_text_from_pdf(resume_file.file)
+    # extract resume text
+    text = extract_text_from_pdf(file.file)
+
+    # extract skills
+    skills = extract_skills(text)
+
+    # run ATS analysis
+    result = analyze_resume(text)
 
     return {
-        "message": "Resume uploaded and parsed",
-        "resume_text": text[:500]
+        "detected_skills": skills,
+        "missing_skills": result.get("missing_skills", []),
+        "match_score": result.get("match_score", 0)
     }
 
 @router.post("/extract-skills")
