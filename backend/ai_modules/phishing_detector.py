@@ -1,124 +1,129 @@
+from __future__ import annotations
+
 import re
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional
 from urllib.parse import urlparse
 
-SUSPICIOUS_KEYWORDS = [
-    "urgent",
-    "payment",
-    "fee",
-    "limited time",
-    "click here",
-    "verify your account",
-    "send money",
-    "application fee",
-    "act now",
-    "congratulations"
+
+@dataclass
+class PhishingResult:
+    """Structured output from phishing detection."""
+    is_suspicious: bool = False
+    risk_score: float = 0.0
+    risk_level: str = "low"
+    flags: List[str] = field(default_factory=list)
+    details: Dict[str, int] = field(default_factory=dict)
+
+
+_PHRASE_PATTERNS = [
+    (re.compile(r"\b(send|wire|transfer|pay)\b.{0,30}\b(money|funds|fee|deposit|payment)\b", re.I),
+     "Requests money transfer or upfront payment"),
+
+    (re.compile(r"\b(advance|upfront|registration)\s*(fee|charge|cost|payment)\b", re.I),
+     "Mentions advance/upfront fee"),
+
+    (re.compile(r"\b(processing|training)\s*fee\b", re.I),
+     "Mentions processing or training fee"),
+
+    (re.compile(r"\b(western\s*union|moneygram|bitcoin|crypto\s*wallet|gift\s*card)\b", re.I),
+     "References untraceable payment method"),
+
+    (re.compile(r"\b(act\s*now|immediately|urgent|limited\s*(time|spots?|openings?))\b", re.I),
+     "Uses high-pressure urgency language"),
+
+    (re.compile(r"\b(social\s*security|ssn|passport\s*number|bank\s*account|credit\s*card)\b", re.I),
+     "Asks for sensitive personal information"),
 ]
 
-TRUSTED_DOMAINS = [
-    "linkedin.com",
-    "google.com",
-    "microsoft.com",
-    "amazon.com",
-    "infosys.com",
-    "tcs.com",
-    "accenture.com"
-]
+
+_SUSPICIOUS_TLDS = {
+    ".xyz", ".top", ".buzz", ".club", ".work", ".click", ".link",
+    ".surf", ".icu", ".cam", ".monster", ".rest"
+}
+
+_URL_SHORTENERS = {
+    "bit.ly", "tinyurl.com", "t.co", "goo.gl", "is.gd", "buff.ly"
+}
 
 
-def extract_urls(text):
-    url_pattern = r'(https?://[^\s]+)'
-    return re.findall(url_pattern, text)
+def check_phishing(text: str, url: Optional[str] = None) -> PhishingResult:
 
-
-def check_domain(url):
-    domain = urlparse(url).netloc
-    for trusted in TRUSTED_DOMAINS:
-        if trusted in domain:
-            return False
-    return True
-
-
-def phishing_detector(email_text):
-
-    score = 0
-    issues = []
-
-    text_lower = email_text.lower()
-
-    for keyword in SUSPICIOUS_KEYWORDS:
-        if keyword in text_lower:
-            score += 10
-            issues.append(f"Suspicious keyword detected: {keyword}")
-
-    urls = extract_urls(email_text)
-
-    if urls:
-        for url in urls:
-            if check_domain(url):
-                score += 20
-                issues.append(f"Suspicious URL: {url}")
-
-    money_patterns = [
-        "pay",
-        "payment",
-        "fee",
-        "transfer",
-        "processing fee",
-        "registration fee"
-    ]
-
-    for word in money_patterns:
-        if word in text_lower:
-            score += 20
-            if "Email requests payment" not in issues:
-                issues.append("Email requests payment")
-
-    if email_text.count("!!!") > 0:
-        score += 5
-        issues.append("Excessive punctuation")
-
-    if score >= 60:
-        risk = "HIGH"
-    elif score >= 30:
-        risk = "MEDIUM"
-    else:
-        risk = "LOW"
-
-    result = {
-        "risk_score": score,
-        "risk_level": risk,
-        "issues_found": issues
+    flags = []
+    counts = {
+        "suspicious_phrases": 0,
+        "url_red_flags": 0,
+        "structural_signals": 0
     }
 
-    return result
+    for pattern, label in _PHRASE_PATTERNS:
+        if pattern.search(text):
+            flags.append(label)
+            counts["suspicious_phrases"] += 1
+
+    if url:
+        parsed = urlparse(url)
+        host = parsed.hostname or ""
+
+        if parsed.scheme != "https":
+            flags.append("URL not using HTTPS")
+            counts["url_red_flags"] += 1
+
+        for tld in _SUSPICIOUS_TLDS:
+            if host.endswith(tld):
+                flags.append(f"Suspicious TLD {tld}")
+                counts["url_red_flags"] += 1
+                break
+
+        for short in _URL_SHORTENERS:
+            if short in host:
+                flags.append("URL shortener used")
+                counts["url_red_flags"] += 1
+                break
+
+    if text.count("!") > 5:
+        flags.append("Too many exclamation marks")
+        counts["structural_signals"] += 1
+
+    words = text.split()
+    if len(words) < 30:
+        flags.append("Posting unusually short")
+        counts["structural_signals"] += 1
+
+    score = (
+        counts["suspicious_phrases"] * 12 +
+        counts["url_red_flags"] * 10 +
+        counts["structural_signals"] * 8
+    )
+
+    score = min(score, 100)
+
+    if score >= 60:
+        level = "high"
+    elif score >= 30:
+        level = "medium"
+    else:
+        level = "low"
+
+    return PhishingResult(
+        is_suspicious=score >= 30,
+        risk_score=score,
+        risk_level=level,
+        flags=flags,
+        details=counts
+    )
 
 
 if __name__ == "__main__":
 
-   
-    sample_email = """
-Subject: Interview Invitation for Software Developer Role
+    sample_text = """
+    URGENT!!! Earn $5000 weekly working from home.
+    Send registration fee immediately to secure your position.
+    """
 
-Dear Joyline,
+    result = check_phishing(sample_text, url="http://bit.ly/joboffer")
 
-Thank you for applying for the Software Developer position at our company.
-
-We would like to invite you for an online interview scheduled on Monday at 10:00 AM.
-
-The interview will be conducted through Microsoft Teams.
-
-Please confirm your availability by replying to this email.
-
-Best regards,
-HR Team
-Accenture
-"""
-
-    result = phishing_detector(sample_email)
-
-    print("Email Risk Score:", result["risk_score"])
-    print("Risk Level:", result["risk_level"])
-    print("\nIssues Found:")
-
-    for issue in result["issues_found"]:
-        print("-", issue)
+    print("Suspicious:", result.is_suspicious)
+    print("Risk Score:", result.risk_score)
+    print("Risk Level:", result.risk_level)
+    print("Flags:", result.flags)
