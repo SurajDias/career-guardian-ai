@@ -1,30 +1,33 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, BarChart3, ShieldAlert, Lightbulb, Target } from "lucide-react";
+import { ArrowLeft, BarChart3, Target, ShieldAlert, Compass } from "lucide-react";
 import SkillGapChart from "../components/SkillGapChart";
-import Dashboard from "../components/Dashboard";
-import PhishingChecker from "../components/PhishingChecker";
-import "../index.css";
+import "../home-stripe.css";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const detectedSkills = ["Python", "Machine Learning", "SQL", "React", "Data Analysis"];
 const missingSkills = ["Docker", "AWS", "System Design"];
 
-function Results() {
+function ResumeAnalysisDashboard() {
 
     const navigate = useNavigate();
     const score = 82;
-    const circumference = 2 * Math.PI * 60; // radius=60
+    const circumference = 2 * Math.PI * 60;
     const offset = circumference - (score / 100) * circumference;
 
     return (
-        <div className="page results-page">
-
-            {/* HEADER */}
-            <div className="results-header">
-                <h1>📊 Resume Analysis Dashboard</h1>
-                <button className="back-btn" onClick={() => navigate("/")}>
-                    <ArrowLeft size={16} /> Back to Home
-                </button>
-            </div>
+        <div className="stripe-landing-page">
+            <Navbar />
+            
+            <div className="page results-page" style={{ paddingTop: '80px' }}>
+                <div className="stripe-container">
+                    {/* HEADER */}
+                    <div className="results-header" style={{ marginBottom: '20px' }}>
+                        <h1 style={{ color: 'var(--s-text-head)'}}>Resume Analysis Dashboard</h1>
+                        <button className="stripe-btn-secondary" onClick={() => navigate("/")}>
+                            <ArrowLeft size={16} /> Back to Home
+                        </button>
+                    </div>
 
             <div className="results-content">
 
@@ -52,7 +55,7 @@ function Results() {
                         </div>
                     </div>
                     <h2>Your Resume Score</h2>
-                    <p>Your resume is strong but has room for improvement in cloud & devops skills</p>
+                    <p>Your resume is strong but has room for improvement in cloud and devops skills</p>
                 </div>
 
                 {/* DASHBOARD GRID */}
@@ -82,49 +85,63 @@ function Results() {
                                 <span key={s} className="skill-tag found">{s}</span>
                             ))}
                         </div>
-                        <div style={{ marginTop: "20px" }}>
-                            <div className="dashboard-card-header" style={{ marginBottom: "12px" }}>
-                                <div className="card-icon red" style={{ width: "32px", height: "32px" }}>
-                                    <Target size={16} />
-                                </div>
-                                <h3 style={{ fontSize: "0.95rem" }}>Missing Skills</h3>
-                            </div>
-                            <div className="skill-tags">
-                                {missingSkills.map((s) => (
-                                    <span key={s} className="skill-tag missing">{s}</span>
-                                ))}
-                            </div>
-                        </div>
                     </div>
 
-                    {/* Scam Risk */}
+                    {/* Missing Skills */}
                     <div className="dashboard-card animate-fade-in-up delay-3">
                         <div className="dashboard-card-header">
-                            <div className="card-icon amber">
-                                <ShieldAlert size={20} />
+                            <div className="card-icon red">
+                                <Target size={20} />
                             </div>
-                            <h3>Job Scam Risk Assessment</h3>
+                            <h3>Missing Skills</h3>
                         </div>
-                        <PhishingChecker />
-                    </div>
-
-                    {/* Career Recommendations */}
-                    <div className="dashboard-card full-width animate-fade-in-up delay-4">
-                        <div className="dashboard-card-header">
-                            <div className="card-icon teal">
-                                <Lightbulb size={20} />
-                            </div>
-                            <h3>Career Recommendations</h3>
+                        <div className="skill-tags">
+                            {missingSkills.map((s) => (
+                                <span key={s} className="skill-tag missing">{s}</span>
+                            ))}
                         </div>
-                        <Dashboard />
                     </div>
 
                 </div>
 
-            </div>
+                {/* NAVIGATION CARDS */}
+                <div className="nav-cards">
+                    <div
+                        className="nav-card animate-fade-in-up delay-4"
+                        onClick={() => navigate("/phishing-detection")}
+                    >
+                        <div className="nav-card-icon amber">
+                            <ShieldAlert size={24} />
+                        </div>
+                        <div className="nav-card-info">
+                            <h3>Phishing Detection</h3>
+                            <p>Scan job posts and emails for scam indicators</p>
+                        </div>
+                        <ArrowLeft size={18} className="nav-card-arrow" />
+                    </div>
 
+                    <div
+                        className="nav-card animate-fade-in-up delay-5"
+                        onClick={() => navigate("/career-roadmap")}
+                    >
+                        <div className="nav-card-icon teal">
+                            <Compass size={24} />
+                        </div>
+                        <div className="nav-card-info">
+                            <h3>Career Roadmap</h3>
+                            <p>Get personalized learning paths and recommendations</p>
+                        </div>
+                        <ArrowLeft size={18} className="nav-card-arrow" />
+                    </div>
+                </div>
+
+                    </div>
+                </div>
+            </div>
+            
+            <Footer />
         </div>
     );
 }
 
-export default Results;
+export default ResumeAnalysisDashboard;
