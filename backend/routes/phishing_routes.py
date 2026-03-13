@@ -1,16 +1,19 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Form
+from backend.ai_modules.phishing_detector import check_phishing
 
 router = APIRouter(prefix="/api/v1/security", tags=["security"])
 
 
 @router.post("/check-phishing")
-def check_phishing(email_text: str):
+def check_phishing_route(text: str = Form(...)):
 
-    if "payment" in email_text.lower():
-        risk = "HIGH"
-    else:
-        risk = "LOW"
+    result = check_phishing(text)
 
     return {
-        "risk_level": risk
+        "is_suspicious": result.is_suspicious,
+        "risk_score": result.risk_score,
+        "risk_level": result.risk_level,
+        "flags": result.flags,
+        "details": result.details
     }
+

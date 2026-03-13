@@ -1,54 +1,99 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Shield, Search, AlertTriangle, CheckCircle, ShieldAlert, ShieldCheck, ShieldX } from "lucide-react";
+import {
+    ArrowLeft,
+    Shield,
+    Search,
+    AlertTriangle,
+    CheckCircle,
+    ShieldAlert,
+    ShieldCheck,
+    ShieldX,
+} from "lucide-react";
+
 import "../home-stripe.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 function PhishingDetection() {
-
     const navigate = useNavigate();
+
     const [input, setInput] = useState("");
     const [scanning, setScanning] = useState(false);
     const [result, setResult] = useState(null);
 
+    // AI Pattern Database
+    const patterns = [
+        {
+            words: ["urgent", "immediately", "act now"],
+            score: 20,
+            reason: "Urgency manipulation detected",
+            category: "Social Engineering",
+        },
+        {
+            words: ["wire transfer", "western union", "crypto", "bitcoin"],
+            score: 30,
+            reason: "Suspicious payment method requested",
+            category: "Financial Fraud",
+        },
+        {
+            words: ["bank account", "ssn", "personal information", "otp"],
+            score: 30,
+            reason: "Sensitive personal information requested",
+            category: "Data Theft",
+        },
+        {
+            words: ["easy money", "guaranteed income", "no experience needed"],
+            score: 15,
+            reason: "Unrealistic job promise",
+            category: "Scam Recruitment",
+        },
+        {
+            words: ["gmail.com", "yahoo.com", "hotmail.com"],
+            score: 10,
+            reason: "Non-corporate email domain used",
+            category: "Suspicious Sender",
+        },
+    ];
+
     const handleScan = () => {
         if (!input.trim()) return;
+
         setScanning(true);
         setResult(null);
 
-        // Simulated AI analysis
         setTimeout(() => {
             const text = input.toLowerCase();
+            let score = 0;
+            let explanations = [];
+
+            patterns.forEach((pattern) => {
+                pattern.words.forEach((word) => {
+                    if (text.includes(word)) {
+                        score += pattern.score;
+
+                        explanations.push({
+                            word,
+                            reason: pattern.reason,
+                            category: pattern.category,
+                            impact: pattern.score,
+                        });
+                    }
+                });
+            });
+
+            if (score > 100) score = 100;
+
             let level = "low";
-            let findings = [];
+            if (score >= 60) level = "high";
+            else if (score >= 30) level = "medium";
 
-            if (text.includes("urgent") || text.includes("immediately") || text.includes("act now")) {
-                findings.push("Urgency language detected");
-                level = "medium";
-            }
-            if (text.includes("wire transfer") || text.includes("western union") || text.includes("cryptocurrency")) {
-                findings.push("Suspicious payment method mentioned");
-                level = "high";
-            }
-            if (text.includes("personal information") || text.includes("ssn") || text.includes("bank account")) {
-                findings.push("Request for sensitive personal data");
-                level = "high";
-            }
-            if (text.includes("guaranteed") || text.includes("no experience needed") || text.includes("easy money")) {
-                findings.push("Unrealistic job promises detected");
-                level = level === "low" ? "medium" : level;
-            }
-            if (text.includes("gmail.com") || text.includes("yahoo.com") || text.includes("hotmail.com")) {
-                findings.push("Non-corporate email domain used");
-                level = level === "low" ? "medium" : level;
-            }
+            setResult({
+                score,
+                level,
+                explanations,
+            });
 
-            if (findings.length === 0) {
-                findings.push("No suspicious patterns detected");
-            }
-
-            setResult({ level, findings });
             setScanning(false);
         }, 1800);
     };
@@ -57,126 +102,144 @@ function PhishingDetection() {
         low: {
             icon: ShieldCheck,
             label: "Low Risk",
-            color: "var(--success)",
-            message: "This content appears legitimate. No major red flags were identified.",
+            message:
+                "No significant phishing indicators detected. This content appears safe.",
         },
         medium: {
             icon: ShieldAlert,
             label: "Medium Risk",
-            color: "var(--warning)",
-            message: "Some suspicious elements were found. Proceed with caution and verify the source independently.",
+            message:
+                "Some suspicious indicators were found. Verify the sender before responding.",
         },
         high: {
             icon: ShieldX,
             label: "High Risk",
-            color: "var(--danger)",
-            message: "Multiple red flags detected. This content is likely fraudulent. Do not share personal information.",
+            message:
+                "Multiple phishing indicators detected. Do not share personal information.",
         },
     };
 
     return (
         <div className="stripe-landing-page">
             <Navbar />
-            
-            <div className="page results-page" style={{ paddingTop: '80px' }}>
+
+            <div className="page results-page" style={{ paddingTop: "80px" }}>
                 <div className="stripe-container">
-                    {/* HEADER */}
-                    <div className="results-header" style={{ marginBottom: '20px' }}>
-                        <h1 style={{ color: 'var(--s-text-head)'}}>Phishing Detection</h1>
-                        <button className="stripe-btn-secondary" onClick={() => navigate("/resume-analysis")}>
-                            <ArrowLeft size={16} /> Back to Dashboard
+
+                    <div className="results-header">
+                        <h1>Explainable AI Phishing Detector</h1>
+
+                        <button
+                            className="stripe-btn-secondary"
+                            onClick={() => navigate("/resume-analysis")}
+                        >
+                            <ArrowLeft size={16} /> Back
                         </button>
                     </div>
 
-            <div className="results-content">
+                    <div className="results-content">
 
-                {/* INPUT SECTION */}
-                <div className="phishing-input-section animate-fade-in-up">
-                    <div className="dashboard-card-header">
-                        <div className="card-icon amber">
-                            <Shield size={20} />
-                        </div>
-                        <h3>Analyze Job Posting or Email</h3>
-                    </div>
-                    <p className="phishing-desc">
-                        Paste a job description or recruitment email below to scan for phishing indicators and scam patterns.
-                    </p>
-                    <textarea
-                        className="phishing-textarea"
-                        placeholder="Paste job description or recruitment email here..."
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        rows={8}
-                    />
-                    <button
-                        className="primary-btn scan-btn"
-                        onClick={handleScan}
-                        disabled={!input.trim() || scanning}
-                    >
-                        {scanning ? (
-                            <>Scanning...</>
-                        ) : (
-                            <><Search size={18} /> Scan for Threats</>
-                        )}
-                    </button>
-                </div>
-
-                {/* RESULTS SECTION */}
-                {result && (
-                    <div className="phishing-results animate-fade-in-up">
-
-                        <div className="dashboard-grid">
-
-                            {/* Risk Level */}
-                            <div className="dashboard-card animate-fade-in-up delay-1">
-                                <div className="dashboard-card-header">
-                                    <div className={`card-icon ${result.level === "low" ? "teal" : result.level === "medium" ? "amber" : "red"}`}>
-                                        {(() => {
-                                            const Icon = riskConfig[result.level].icon;
-                                            return <Icon size={20} />;
-                                        })()}
-                                    </div>
-                                    <h3>Risk Assessment</h3>
+                        {/* INPUT */}
+                        <div className="dashboard-card">
+                            <div className="dashboard-card-header">
+                                <div className="card-icon amber">
+                                    <Shield size={20} />
                                 </div>
-                                <div className={`risk-indicator ${result.level}`}>
+                                <h3>Scan Email or Job Post</h3>
+                            </div>
+
+                            <textarea
+                                className="phishing-textarea"
+                                placeholder="Paste suspicious email or job posting..."
+                                rows={8}
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                            />
+
+                            <button
+                                className="primary-btn scan-btn"
+                                onClick={handleScan}
+                                disabled={scanning}
+                            >
+                                {scanning ? "AI Scanning..." : <><Search size={18} /> Scan with AI</>}
+                            </button>
+                        </div>
+
+                        {/* RESULT */}
+                        {result && (
+                            <div className="dashboard-grid">
+
+                                {/* Risk Assessment */}
+                                <div className="dashboard-card">
+                                    <div className="dashboard-card-header">
+                                        <h3>Risk Assessment</h3>
+                                    </div>
+
                                     {(() => {
                                         const Icon = riskConfig[result.level].icon;
-                                        return <Icon size={22} />;
+
+                                        return (
+                                            <>
+                                                <div className={`risk-indicator ${result.level}`}>
+                                                    <Icon size={24} />
+                                                    <span className={`risk-badge ${result.level}`}>
+                                                        {riskConfig[result.level].label}
+                                                    </span>
+                                                </div>
+
+                                                <p className="risk-text">
+                                                    {riskConfig[result.level].message}
+                                                </p>
+
+                                                {/* AI Score */}
+                                                <div className="ai-score">
+                                                    <p><strong>AI Risk Score:</strong> {result.score}/100</p>
+
+                                                    <div className="progress-bar">
+                                                        <div
+                                                            className="progress-fill"
+                                                            style={{ width: `${result.score}%` }}
+                                                        ></div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        );
                                     })()}
-                                    <span className={`risk-badge ${result.level}`}>
-                                        {riskConfig[result.level].label}
-                                    </span>
                                 </div>
-                                <p className="risk-text" style={{ marginTop: "14px", lineHeight: "1.7" }}>
-                                    {riskConfig[result.level].message}
-                                </p>
-                            </div>
 
-                            {/* Findings */}
-                            <div className="dashboard-card animate-fade-in-up delay-2">
-                                <div className="dashboard-card-header">
-                                    <div className="card-icon purple">
+                                {/* Explainable AI Section */}
+                                <div className="dashboard-card">
+                                    <div className="dashboard-card-header">
                                         <AlertTriangle size={20} />
+                                        <h3>Explainable AI Analysis</h3>
                                     </div>
-                                    <h3>Analysis Findings</h3>
+
+                                    {result.explanations.length === 0 ? (
+                                        <p>No suspicious indicators detected.</p>
+                                    ) : (
+                                        <ul className="findings-list">
+                                            {result.explanations.map((item, index) => (
+                                                <li key={index} className="finding-item">
+                                                    <CheckCircle size={16} />
+                                                    <div>
+                                                        <strong>{item.word}</strong> → {item.reason}
+                                                        <br />
+                                                        <small>
+                                                            Category: {item.category} | Risk Impact: +{item.impact}
+                                                        </small>
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
                                 </div>
-                                <ul className="findings-list">
-                                    {result.findings.map((f, i) => (
-                                        <li key={i} className="finding-item">
-                                            <CheckCircle size={16} />
-                                            <span>{f}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+
                             </div>
-
-                        </div>
-
+                        )}
                     </div>
-                )}
-                </div>
                 </div>
             </div>
+
             <Footer />
         </div>
     );

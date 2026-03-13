@@ -21,8 +21,9 @@ async def upload_resume(file: UploadFile = File(...)):
 
     return {
         "detected_skills": skills,
-        "missing_skills": result.get("missing_skills", []),
-        "match_score": result.get("match_score", 0)
+        "missing_skills": result.get("missing_keywords", []),
+        "match_score": result.get("ats_score", 0),
+        "suggestions": result.get("suggestions", [])
     }
 
 @router.post("/extract-skills")

@@ -10,6 +10,7 @@ function UploadPage() {
 
     const [file, setFile] = useState(null);
     const [dragOver, setDragOver] = useState(false);
+    const [jobDescription, setJobDescription] = useState("");
 
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
@@ -50,8 +51,8 @@ function UploadPage() {
 
         console.log("Sending file to processing page:", file);
 
-        // Send file to ProcessingPage
-        navigate("/processing", { state: { file } });
+        // Send file and optional job description to ProcessingPage
+        navigate("/processing", { state: { file, jobDescription } });
     };
 
     const formatSize = (bytes) => {
@@ -101,6 +102,7 @@ function UploadPage() {
                             type="file"
                             accept=".pdf,.doc,.docx"
                             onChange={handleFileChange}
+                            style={{ display: "none" }}
                         />
 
                     </div>
@@ -127,6 +129,27 @@ function UploadPage() {
                         </div>
 
                     )}
+
+                    <div style={{ width: "100%", marginTop: "24px" }}>
+                        <h3 style={{ marginBottom: "12px", color: "var(--s-text-head)", fontSize: "16px", fontWeight: "600" }}>Target Job Description (Optional)</h3>
+                        <p style={{ marginBottom: "12px", fontSize: "14px", color: "var(--s-text-sub)" }}>Paste a job description to perform a deep skill gap analysis.</p>
+                        <textarea
+                            className="nav-card"
+                            placeholder="e.g. We are looking for a Senior React Engineer with experience in TypeScript, Node.js, and AWS..."
+                            style={{ 
+                                width: "100%", 
+                                minHeight: "120px", 
+                                padding: "16px", 
+                                borderRadius: "12px", 
+                                resize: "vertical",
+                                border: "1px solid var(--s-border)",
+                                backgroundColor: "white",
+                                color: "var(--s-text-head)"
+                            }}
+                            value={jobDescription}
+                            onChange={(e) => setJobDescription(e.target.value)}
+                        />
+                    </div>
 
                     <div className="upload-actions">
 

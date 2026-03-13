@@ -1,21 +1,22 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
-const data = [
-    { skill: "Python", level: 90, status: "found" },
-    { skill: "ML", level: 85, status: "found" },
-    { skill: "SQL", level: 80, status: "found" },
-    { skill: "React", level: 70, status: "found" },
-    { skill: "Docker", level: 20, status: "missing" },
-    { skill: "AWS", level: 15, status: "missing" },
-    { skill: "System Design", level: 10, status: "missing" },
-];
-
 const COLORS = {
     found: "#00d4aa",
     missing: "#ff4d6a",
 };
 
-function SkillGapChart() {
+function SkillGapChart({ detectedSkills = [], missingSkills = [] }) {
+    
+    // Generate dynamic chart data based on API results
+    const data = [
+        ...detectedSkills.map(skill => ({ skill: skill.length > 12 ? skill.substring(0, 10) + "..." : skill, level: 85, status: "found" })),
+        ...missingSkills.map(skill => ({ skill: skill.length > 12 ? skill.substring(0, 10) + "..." : skill, level: 20, status: "missing" }))
+    ];
+
+    if (data.length === 0) {
+        return <div style={{ padding: "20px", textAlign: "center", color: "#8898aa" }}>No skills detected</div>;
+    }
+
     return (
         <div className="chart-container">
             <ResponsiveContainer width="100%" height="100%">

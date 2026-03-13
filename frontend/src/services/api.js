@@ -15,20 +15,38 @@ export const checkBackendHealth = async () => {
 
 
 /* -------------------------------
+   Job Skill Extraction
+--------------------------------*/
+export const extractJobSkills = async (jobDescription) => {
+  const response = await fetch(`${BASE_URL}/job/extract-skills`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ job_description: jobDescription })
+  });
+
+  if (!response.ok) {
+    throw new Error("Job skill extraction failed");
+  }
+
+  return await response.json();
+};
+
+/* -------------------------------
    Skill Gap Analysis
 --------------------------------*/
 export const analyzeSkillGap = async (resumeSkills, jobSkills) => {
 
-  const formData = new URLSearchParams();
-  formData.append("resume_skills", resumeSkills);
-  formData.append("job_skills", jobSkills);
-
   const response = await fetch(`${BASE_URL}/job/skill-gap/analyze`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/json"
     },
-    body: formData
+    body: JSON.stringify({
+        resume_skills: resumeSkills,
+        job_skills: jobSkills
+    })
   });
 
   if (!response.ok) {

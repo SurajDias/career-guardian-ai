@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { uploadResume } from "../services/api";
+import { uploadResume, extractJobSkills, analyzeSkillGap } from "../services/api";
 import { FileSearch, Cpu, BarChart3, Globe, CheckCircle, Loader } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -9,8 +9,8 @@ import "../home-stripe.css";
 const STEPS = [
   { icon: FileSearch, label: "Analyzing Resume..." },
   { icon: Cpu, label: "Extracting Skills..." },
-  { icon: BarChart3, label: "Checking ATS Score..." },
-  { icon: Globe, label: "Matching Job Market Data..." }
+  { icon: BarChart3, label: "Validating against Job requirements..." },
+  { icon: Globe, label: "Generating Career Sandbox..." }
 ];
 
 function ProcessingPage() {
@@ -28,6 +28,7 @@ function ProcessingPage() {
     hasRun.current = true;
 
     const file = location.state?.file;
+    const jobDescription = location.state?.jobDescription;
 
     if (!file) {
       console.error("No file received.");
@@ -38,28 +39,41 @@ function ProcessingPage() {
     const processResume = async () => {
 
       try {
-
         console.log("Uploading file:", file);
+        const resumeResult = await uploadResume(file);
 
-        const result = await uploadResume(file);
-
-        console.log("Backend response:", result);
-
-        if (!result) {
+        if (!resumeResult) {
           throw new Error("Empty response from backend");
+        }
+
+        let finalData = { ...resumeResult, isJobAnalysis: false };
+
+        if (jobDescription && jobDescription.trim() !== "") {
+            console.log("Extracting Job Skills...");
+            const jobResult = await extractJobSkills(jobDescription);
+            
+            console.log("Running Deep Skill Gap Analytics...");
+            const gapResult = await analyzeSkillGap(
+                resumeResult.detected_skills.join(","),
+                jobResult.job_skills.join(",")
+            );
+
+            // Merge ATS baseline data with the deep gap analysis matrix
+            finalData = {
+                ...gapResult,
+                isJobAnalysis: true,
+                atsData: resumeResult
+            };
         }
 
         // small delay so UI animation looks smooth
         setTimeout(() => {
-          navigate("/resume-analysis", { state: { data: result } });
+          navigate("/resume-analysis", { state: { data: finalData } });
         }, 1500);
 
       } catch (error) {
-
         console.error("Upload error:", error);
-
         alert("Error processing resume. Check console for details.");
-
       }
 
     };
