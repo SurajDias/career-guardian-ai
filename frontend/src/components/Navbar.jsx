@@ -1,9 +1,11 @@
 import { Shield } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 
 export default function Navbar() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const isHome = location.pathname === "/";
     const [isAboutOpen, setIsAboutOpen] = useState(false);
 
     const scrollToFeatures = () => {
@@ -26,15 +28,19 @@ export default function Navbar() {
                     <Shield size={24} className="stripe-logo-icon" />
                     <span className="stripe-logo-text">CareerGuardian</span>
                 </div>
-                <nav className="stripe-nav-links">
-                    <button onClick={scrollToFeatures}>Features</button>
-                    <button onClick={() => setIsAboutOpen(true)}>About</button>
-                </nav>
-                <div className="stripe-nav-actions">
-                    <button className="stripe-btn-primary" onClick={() => navigate("/upload")}>
-                        Start now <span className="arrow">→</span>
-                    </button>
-                </div>
+                {isHome && (
+                    <>
+                        <nav className="stripe-nav-links">
+                            <button onClick={scrollToFeatures}>Features</button>
+                            <button onClick={() => setIsAboutOpen(true)}>About</button>
+                        </nav>
+                        <div className="stripe-nav-actions">
+                            <button className="stripe-btn-primary" onClick={() => navigate("/upload")}>
+                                Start now <span className="arrow">→</span>
+                            </button>
+                        </div>
+                    </>
+                )}
                 {/* Mobile Hamburger Placeholder */}
                 <div className="stripe-mobile-menu">
                     <div className="hamburger"></div>

@@ -1,22 +1,26 @@
-/* ========== STRIPE INSPIRED LANDING PAGE CSS ========== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ========== PREMIUM STRIPE-INSPIRED LANDING PAGE CSS ========== */
 
 .stripe-landing-page {
-  /* Stripe Light Theme Variables */
-  --s-bg: #f6f9fc;
-  --s-bg-card: #ffffff;
-  --s-text-head: #0a2540;
-  --s-text-body: #425466;
-  --s-primary: #635bff;
-  --s-primary-hover: #0a2540;
-  --s-accent: #00d4ff;
-  --s-shadow: 0 30px 60px -12px rgba(50,50,93,0.25), 0 18px 36px -18px rgba(0,0,0,0.3);
-  --s-shadow-hover: 0 40px 70px -15px rgba(50,50,93,0.3), 0 24px 48px -20px rgba(0,0,0,0.35);
-  --s-shadow-soft: 0 4px 14px 0 rgba(0,0,0,0.08);
-  --s-border: #e6ebf1;
-  --s-radius: 12px;
-  --s-radius-lg: 24px;
-  --s-transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  --s-container: 1080px;
+  /* Premium Glassmorphic Theme Variables */
+  --font: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --s-bg: #f3f6f9;
+  --s-bg-card: rgba(255, 255, 255, 0.75);
+  --s-glass-border: rgba(255, 255, 255, 0.6);
+  --s-text-head: #0b1a2e;
+  --s-text-body: #4a5d73;
+  --s-primary: #5244e1;
+  --s-primary-hover: #3b2eb5;
+  --s-accent: #00e0ff;
+  --s-shadow: 0 40px 80px -20px rgba(50,50,93,0.2), 0 25px 40px -20px rgba(0,0,0,0.2);
+  --s-shadow-hover: 0 50px 100px -20px rgba(50,50,93,0.3), 0 30px 60px -30px rgba(0,0,0,0.3);
+  --s-shadow-soft: 0 8px 24px rgba(149, 157, 165, 0.15);
+  --s-border: rgba(226, 232, 240, 0.8);
+  --s-radius: 16px;
+  --s-radius-lg: 32px;
+  --s-transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --s-container: 1140px;
 
   background-color: var(--s-bg);
   color: var(--s-text-body);
@@ -61,11 +65,11 @@
 
 /* Buttons */
 .stripe-btn-primary {
-  background-color: var(--s-primary);
+  background: linear-gradient(135deg, #635bff, #4b3cd0);
   color: #fff;
   border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
+  border-radius: 24px;
+  padding: 10px 20px;
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
@@ -73,18 +77,19 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  box-shadow: 0 4px 14px rgba(99, 91, 255, 0.3);
 }
 
 .stripe-btn-primary:hover {
-  background-color: var(--s-primary-hover);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 20px rgba(10, 37, 64, 0.15);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(99, 91, 255, 0.4);
+  background: linear-gradient(135deg, #7c74ff, #5244e1);
 }
 
 .stripe-btn-primary.large {
-  padding: 12px 24px;
-  font-size: 1.05rem;
-  border-radius: 24px;
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  border-radius: 30px;
 }
 
 .stripe-btn-secondary {
@@ -141,12 +146,17 @@
 
 /* ========== NAVBAR ========== */
 .stripe-navbar {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
-  padding: 20px 0;
+  z-index: 1000;
+  padding: 16px 0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  transition: var(--s-transition);
 }
 
 .stripe-nav-container {
@@ -243,41 +253,40 @@
 }
 
 .blob-1 {
-  width: 600px;
-  height: 600px;
-  background: linear-gradient(135deg, #ff7eb3, #ff758c);
-  top: -200px;
-  right: -100px;
-  animation: float 14s ease-in-out infinite alternate;
+  width: 700px;
+  height: 700px;
+  background: linear-gradient(135deg, #ff6b6b, #ff007a);
+  top: -250px;
+  right: -150px;
+  animation: float 16s ease-in-out infinite alternate;
 }
 
 .blob-2 {
-  width: 500px;
-  height: 500px;
-  background: linear-gradient(135deg, #7bd5f5, #00d4ff);
-  top: 100px;
-  left: -200px;
-  animation: float 18s ease-in-out infinite alternate-reverse;
+  width: 600px;
+  height: 600px;
+  background: linear-gradient(135deg, #00e5ff, #0077ff);
+  top: 150px;
+  left: -250px;
+  animation: float 20s ease-in-out infinite alternate-reverse;
 }
 
 .blob-3 {
-  width: 400px;
-  height: 400px;
-  background: linear-gradient(135deg, #635bff, #7c4dff);
-  bottom: -150px;
-  right: 20%;
-  animation: float 12s ease-in-out infinite alternate;
+  width: 500px;
+  height: 500px;
+  background: linear-gradient(135deg, #7b2ff7, #bd00ff);
+  bottom: -200px;
+  right: 15%;
+  animation: float 14s ease-in-out infinite alternate;
 }
 
 .blob-4 {
-  width: 700px;
-  height: 300px;
-  background: #ffffff;
+  width: 800px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.9);
   bottom: 0;
   left: 0;
   right: 0;
-  opacity: 0.8;
-  filter: blur(40px);
+  filter: blur(60px);
   width: 100%;
 }
 
@@ -353,7 +362,10 @@
 
 .stripe-card {
   background: var(--s-bg-card);
-  padding: 32px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--s-glass-border);
+  padding: 36px;
   border-radius: var(--s-radius-lg);
   box-shadow: var(--s-shadow-soft);
   transition: var(--s-transition);
@@ -363,9 +375,10 @@
 }
 
 .stripe-card:hover {
-  transform: translateY(-6px) scale(1.015);
+  transform: translateY(-8px) scale(1.02);
   box-shadow: var(--s-shadow);
-  border-color: rgba(50,50,93,0.05);
+  border-color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .stripe-card-icon {
