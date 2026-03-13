@@ -1,196 +1,304 @@
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Compass, BookOpen, Award, FolderGit2, TrendingUp, Code, Cloud, Layers, GraduationCap } from "lucide-react";
-import Dashboard from "../components/Dashboard";
+import { useRef, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import "../home-stripe.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { getRoadmap } from "../services/api";
 
-const certifications = [
-    {
-        icon: Cloud,
-        title: "AWS Certified Cloud Practitioner",
-        provider: "Amazon Web Services",
-        difficulty: "Beginner",
-    },
-    {
-        icon: Layers,
-        title: "Docker Certified Associate",
-        provider: "Docker Inc.",
-        difficulty: "Intermediate",
-    },
-    {
-        icon: Code,
-        title: "System Design Interview Prep",
-        provider: "Educative.io",
-        difficulty: "Advanced",
-    },
-    {
-        icon: GraduationCap,
-        title: "Google Data Analytics Certificate",
-        provider: "Google via Coursera",
-        difficulty: "Beginner",
-    },
+/* ─── Skill metadata ───────────────────────────────── */
+
+const SKILL_META = {
+  python:{emoji:"🐍",col:"#1D9E75",bg:"#E1F5EE",tx:"#085041",level:"Beginner",time:"4-6 weeks",x:100,y:90},
+  sql:{emoji:"🗄",col:"#1D9E75",bg:"#E1F5EE",tx:"#085041",level:"Beginner",time:"2-3 weeks",x:560,y:90},
+  html:{emoji:"🌐",col:"#1D9E75",bg:"#E1F5EE",tx:"#085041",level:"Beginner",time:"2-3 weeks",x:100,y:240},
+  javascript:{emoji:"⚡",col:"#1D9E75",bg:"#E1F5EE",tx:"#085041",level:"Beginner",time:"6-8 weeks",x:310,y:240},
+  css:{emoji:"🎨",col:"#1D9E75",bg:"#E1F5EE",tx:"#085041",level:"Beginner",time:"2-3 weeks",x:420,y:240},
+
+  docker:{emoji:"🐳",col:"#7F77DD",bg:"#EEEDFE",tx:"#3C3489",level:"Intermediate",time:"2-3 weeks",x:100,y:390},
+  aws:{emoji:"☁",col:"#7F77DD",bg:"#EEEDFE",tx:"#3C3489",level:"Intermediate",time:"6-8 weeks",x:310,y:390},
+  react:{emoji:"⚛",col:"#7F77DD",bg:"#EEEDFE",tx:"#3C3489",level:"Intermediate",time:"4-6 weeks",x:560,y:390},
+
+  "node.js":{emoji:"🟢",col:"#7F77DD",bg:"#EEEDFE",tx:"#3C3489",level:"Intermediate",time:"4-5 weeks",x:100,y:480},
+  mongodb:{emoji:"🍃",col:"#7F77DD",bg:"#EEEDFE",tx:"#3C3489",level:"Intermediate",time:"2-3 weeks",x:310,y:480},
+  "machine learning":{emoji:"🤖",col:"#7F77DD",bg:"#EEEDFE",tx:"#3C3489",level:"Intermediate",time:"8-12 weeks",x:560,y:480},
+
+  kubernetes:{emoji:"🚢",col:"#D85A30",bg:"#FAECE7",tx:"#712B13",level:"Advanced",time:"4-6 weeks",x:200,y:570},
+  tensorflow:{emoji:"🧠",col:"#D85A30",bg:"#FAECE7",tx:"#712B13",level:"Advanced",time:"4-6 weeks",x:460,y:570},
+};
+
+/* ─── Dependencies ───────────────────────────────── */
+
+const ALL_EDGES = [
+["python","docker"],["python","aws"],["python","machine learning"],
+["sql","aws"],["html","javascript"],["html","css"],
+["javascript","react"],["javascript","node.js"],
+["docker","kubernetes"],["aws","kubernetes"],
+["machine learning","tensorflow"],["node.js","mongodb"]
 ];
 
-const roadmapSteps = [
-    {
-        phase: "Month 1-2",
-        title: "Foundation Building",
-        description: "Fill critical skill gaps in Docker and cloud fundamentals. Complete AWS Cloud Practitioner certification.",
-    },
-    {
-        phase: "Month 3-4",
-        title: "Practical Application",
-        description: "Build 2-3 portfolio projects demonstrating cloud deployment and containerization skills.",
-    },
-    {
-        phase: "Month 5-6",
-        title: "Advanced Skills",
-        description: "Study system design patterns and distributed systems. Practice with mock interviews.",
-    },
-    {
-        phase: "Month 7+",
-        title: "Career Advancement",
-        description: "Target senior roles with updated resume. Leverage new skills for higher-impact positions.",
-    },
-];
+/* ─── SVG MAP ───────────────────────────────── */
 
-const skillProgress = [
-    { skill: "Python", current: 90, target: 95 },
-    { skill: "Machine Learning", current: 85, target: 90 },
-    { skill: "SQL", current: 80, target: 85 },
-    { skill: "React", current: 70, target: 85 },
-    { skill: "Docker", current: 20, target: 75 },
-    { skill: "AWS", current: 15, target: 70 },
-    { skill: "System Design", current: 10, target: 70 },
-];
+function RoadmapSVG({nodes,onSelect,selected}){
 
-function CareerRoadmap() {
+const visIds=new Set(nodes.map(n=>n.id));
+const nodeMap=Object.fromEntries(nodes.map(n=>[n.id,n]));
+const maxY=nodes.reduce((m,n)=>Math.max(m,n.meta.y),0)+100;
 
-    const navigate = useNavigate();
+return(
 
-    return (
-        <div className="stripe-landing-page">
-            <Navbar />
-            
-            <div className="page results-page" style={{ paddingTop: '80px' }}>
-                <div className="stripe-container">
-                    {/* HEADER */}
-                    <div className="results-header" style={{ marginBottom: '20px' }}>
-                        <h1 style={{ color: 'var(--s-text-head)'}}>Career Roadmap</h1>
-                        <button className="stripe-btn-secondary" onClick={() => navigate("/resume-analysis")}>
-                            <ArrowLeft size={16} /> Back to Dashboard
-                        </button>
-                    </div>
+<svg width="100%" viewBox={`0 0 680 ${maxY}`}>
 
-            <div className="results-content">
+{ALL_EDGES.map(([a,b])=>{
+if(!visIds.has(a)||!visIds.has(b)) return null
 
-                <div className="dashboard-grid">
+const A=nodeMap[a].meta
+const B=nodeMap[b].meta
+const mx=(A.x+B.x)/2
+const my=(A.y+B.y)/2-30
 
-                    {/* Career Recommendations — reuses Dashboard component */}
-                    <div className="dashboard-card full-width animate-fade-in-up delay-1">
-                        <div className="dashboard-card-header">
-                            <div className="card-icon teal">
-                                <TrendingUp size={20} />
-                            </div>
-                            <h3>Career Recommendations</h3>
-                        </div>
-                        <Dashboard />
-                    </div>
+return(
+<path
+key={a+b}
+d={`M${A.x},${A.y} Q${mx},${my} ${B.x},${B.y}`}
+fill="none"
+stroke="#B4B2A9"
+strokeWidth="1.5"
+strokeDasharray="6 4"
+/>
+)
+})}
 
-                    {/* Learning Roadmap Timeline */}
-                    <div className="dashboard-card full-width animate-fade-in-up delay-2">
-                        <div className="dashboard-card-header">
-                            <div className="card-icon purple">
-                                <Compass size={20} />
-                            </div>
-                            <h3>Learning Roadmap</h3>
-                        </div>
-                        <div className="roadmap-timeline">
-                            {roadmapSteps.map((step, i) => (
-                                <div key={i} className="roadmap-step">
-                                    <div className="roadmap-marker">
-                                        <div className="roadmap-dot" />
-                                        {i < roadmapSteps.length - 1 && <div className="roadmap-line" />}
-                                    </div>
-                                    <div className="roadmap-content">
-                                        <span className="roadmap-phase">{step.phase}</span>
-                                        <h4>{step.title}</h4>
-                                        <p>{step.description}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+{nodes.map(node=>{
 
-                    {/* Skill Development Progress */}
-                    <div className="dashboard-card animate-fade-in-up delay-3">
-                        <div className="dashboard-card-header">
-                            <div className="card-icon purple">
-                                <BookOpen size={20} />
-                            </div>
-                            <h3>Skill Development Plan</h3>
-                        </div>
-                        <div className="skill-progress-list">
-                            {skillProgress.map((s, i) => (
-                                <div key={i} className="skill-progress-item">
-                                    <div className="skill-progress-header">
-                                        <span className="skill-progress-name">{s.skill}</span>
-                                        <span className="skill-progress-values">
-                                            {s.current}% / {s.target}%
-                                        </span>
-                                    </div>
-                                    <div className="skill-progress-bar">
-                                        <div
-                                            className="skill-progress-current"
-                                            style={{ width: `${s.current}%` }}
-                                        />
-                                        <div
-                                            className="skill-progress-target"
-                                            style={{ width: `${s.target}%` }}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+const {x,y,col,bg,tx}=node.meta
+const isSelected=selected===node.id
 
-                    {/* Suggested Certifications */}
-                    <div className="dashboard-card animate-fade-in-up delay-4">
-                        <div className="dashboard-card-header">
-                            <div className="card-icon amber">
-                                <Award size={20} />
-                            </div>
-                            <h3>Suggested Certifications</h3>
-                        </div>
-                        <div className="cert-list">
-                            {certifications.map((cert, i) => {
-                                const Icon = cert.icon;
-                                return (
-                                    <div key={i} className="cert-item">
-                                        <div className="cert-icon">
-                                            <Icon size={18} />
-                                        </div>
-                                        <div className="cert-info">
-                                            <h4>{cert.title}</h4>
-                                            <p>{cert.provider}</p>
-                                        </div>
-                                        <span className={`cert-difficulty ${cert.difficulty.toLowerCase()}`}>
-                                            {cert.difficulty}
-                                        </span>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
+return(
+<g key={node.id} transform={`translate(${x},${y})`} onClick={()=>onSelect(node)} style={{cursor:"pointer"}}>
 
-                </div>
-                </div>
-                </div>
-            </div>
-            <Footer />
-        </div>
-    );
+<circle r="44" fill={bg} opacity="0.35"/>
+<circle r="36" fill={bg} stroke={col} strokeWidth={isSelected?4:2}/>
+<circle r="24" fill={col} opacity="0.12"/>
+
+<text textAnchor="middle" dy="0.35em" fill={tx} fontSize="11">
+{node.label}
+</text>
+
+<text textAnchor="middle" y="56" fill="#888780" fontSize="10">
+{node.meta.time}
+</text>
+
+</g>
+)
+})}
+
+</svg>
+)
 }
 
-export default CareerRoadmap;
+/* ─── MAIN COMPONENT ───────────────────────────────── */
+
+function CareerRoadmap(){
+
+const navigate=useNavigate()
+const location=useLocation()
+
+const missingSkills=location.state?.missingSkills ?? []
+
+/* ⭐ DEFAULT ROADMAP IF FEW SKILLS */
+
+const defaultSkills=[
+"Python",
+"SQL",
+"JavaScript",
+"React",
+"Docker",
+"AWS",
+"Node.js",
+"MongoDB",
+"Machine Learning"
+]
+
+const roadmap = getRoadmap(
+  missingSkills.length < 5
+    ? [...new Set([...missingSkills, ...defaultSkills])]
+    : missingSkills
+)
+
+const [filter,setFilter]=useState("All")
+const [selected,setSelected]=useState(null)
+const detailRef=useRef(null)
+
+const allNodes=roadmap.map(item=>({
+id:item.skill.toLowerCase(),
+label:item.skill,
+meta:SKILL_META[item.skill.toLowerCase()]??{
+emoji:"📌",col:"#888780",bg:"#F1EFE8",tx:"#444441",
+level:"Beginner",time:item.estimated_time??"—",x:100,y:90
+},
+resources:item.resources??[]
+}))
+
+const visNodes=filter==="All"?allNodes:allNodes.filter(n=>n.meta.level===filter)
+
+const stats={
+beginner:allNodes.filter(n=>n.meta.level==="Beginner").length,
+intermediate:allNodes.filter(n=>n.meta.level==="Intermediate").length,
+advanced:allNodes.filter(n=>n.meta.level==="Advanced").length,
+weeks:allNodes.reduce((a,n)=>{
+const m=n.meta.time.match(/\d+/)
+return a+(m?parseInt(m[0]):0)
+},0)
+}
+
+const fastestSkill=[...allNodes].sort((a,b)=>parseInt(a.meta.time)-parseInt(b.meta.time))[0]
+
+const roleMap={
+react:"Frontend Developer",
+"node.js":"Backend Developer",
+docker:"DevOps Engineer",
+aws:"Cloud Engineer",
+"machine learning":"ML Engineer"
+}
+
+let suggestedRole="Software Developer"
+
+for(const n of allNodes){
+if(roleMap[n.id]){
+suggestedRole=roleMap[n.id]
+break
+}
+}
+
+const handleSelect=node=>{
+setSelected(node.id)
+setTimeout(()=>detailRef.current?.scrollIntoView({behavior:"smooth"}),100)
+}
+
+const selectedNode=allNodes.find(n=>n.id===selected)
+
+return(
+
+<div className="stripe-landing-page">
+
+<Navbar/>
+
+<div className="page results-page" style={{paddingTop:"80px"}}>
+<div className="stripe-container">
+
+<div className="results-header">
+<h1>Career Roadmap</h1>
+
+<button className="stripe-btn-secondary"
+onClick={()=>navigate("/resume-analysis",{state:location.state})}>
+<ArrowLeft size={16}/> Back
+</button>
+
+</div>
+
+<p style={{textAlign:"center",marginBottom:"2rem"}}>
+AI generated learning path based on resume analysis
+</p>
+
+{/* STATS */}
+
+<div style={{display:"flex",gap:"12px",justifyContent:"center",flexWrap:"wrap",marginBottom:"2rem"}}>
+
+<div className="dashboard-card">
+<h3>{stats.beginner}</h3>
+<p>Beginner Skills</p>
+</div>
+
+<div className="dashboard-card">
+<h3>{stats.intermediate}</h3>
+<p>Intermediate Skills</p>
+</div>
+
+<div className="dashboard-card">
+<h3>{stats.advanced}</h3>
+<p>Advanced Skills</p>
+</div>
+
+<div className="dashboard-card">
+<h3>{stats.weeks}+ weeks</h3>
+<p>Total Learning</p>
+</div>
+
+</div>
+
+{/* INSIGHTS */}
+
+<div style={{display:"flex",gap:"12px",justifyContent:"center",flexWrap:"wrap",marginBottom:"2rem"}}>
+
+<div className="dashboard-card">
+<h3>🚀 {fastestSkill?.label}</h3>
+<p>Fastest Skill</p>
+</div>
+
+<div className="dashboard-card">
+<h3>📈 {stats.weeks} weeks</h3>
+<p>Estimated Learning</p>
+</div>
+
+<div className="dashboard-card">
+<h3>🎯 {suggestedRole}</h3>
+<p>Suggested Role</p>
+</div>
+
+</div>
+
+{/* FILTER */}
+
+<div style={{textAlign:"center",marginBottom:"1rem"}}>
+<button onClick={()=>setFilter("All")}>All</button>
+<button onClick={()=>setFilter("Beginner")}>Beginner</button>
+<button onClick={()=>setFilter("Intermediate")}>Intermediate</button>
+<button onClick={()=>setFilter("Advanced")}>Advanced</button>
+</div>
+
+{/* MAP */}
+
+<div className="dashboard-card full-width">
+
+<RoadmapSVG
+nodes={visNodes}
+onSelect={handleSelect}
+selected={selected}
+/>
+
+</div>
+
+{/* DETAILS */}
+
+<div ref={detailRef}>
+
+{selectedNode&&(
+
+<div className="dashboard-card">
+
+<h3>{selectedNode.label}</h3>
+<p>Estimated Time: {selectedNode.meta.time}</p>
+
+{selectedNode.resources.map((res,i)=>(
+<a key={i} href={res.url} target="_blank" rel="noreferrer">
+{res.title}
+</a>
+))}
+
+</div>
+
+)}
+
+</div>
+
+</div>
+</div>
+
+<Footer/>
+
+</div>
+)
+}
+
+export default CareerRoadmap
