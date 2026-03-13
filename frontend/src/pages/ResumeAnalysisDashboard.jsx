@@ -180,9 +180,10 @@ function ResumeAnalysisDashboard() {
                                 <ArrowLeft size={18} className="nav-card-arrow" />
                             </div>
 
+                            {/* ✅ FIXED: pass missingSkills so CareerRoadmap generates a personalised roadmap */}
                             <div
                                 className="nav-card animate-fade-in-up delay-6"
-                                onClick={() => navigate("/career-roadmap")}
+                                onClick={() => navigate("/career-roadmap", { state: { missingSkills } })}
                             >
                                 <div className="nav-card-icon teal">
                                     <Compass size={24} />
